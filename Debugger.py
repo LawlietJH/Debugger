@@ -3,7 +3,7 @@
 # Debugger.py
 # Python 3
 # By: LawlietJH
-# - - - v1.2.0
+# - - - v1.2.1
 
 
 import functools
@@ -21,7 +21,7 @@ def timer(func):						# Recibe la Función.
 		tmp_fin = time.perf_counter()		# Obtiene el Tiempo actual despues de correr la función.
 		tmp_tot = tmp_fin - tmp_ini			# Calcula el tiempo transcurrido.
 		
-		print(f'\n [+] Terminado {func.__name__!r} en {tmp_tot:.4f} segundos.\n')
+		print(f'\n [+] Terminada la función \'{func.__name__}()\' en {tmp_tot:.4f} segundos.\n')
 		
 		return valores
 	return fArgs
@@ -38,7 +38,7 @@ def counter(func):
 		fArgs.count = fArgs.count + 1
 		valores = func(*args, **kwargs)
 		
-		print(f'\n [+] La Función {func.__name__!r} Ha Sido Utilizada {fArgs.count} veces.\n')
+		print(f'\n [+] La Función \'{func.__name__}()\' Ha Sido Utilizada {fArgs.count} veces.\n')
 		
 		return valores
 	fArgs.count = 0
@@ -102,7 +102,7 @@ class getSymbolsTable(object):
 	
 	@property			# permite ejecutar la funcion 'self.locals()' como 'self.locals'.
 	def locals(self):
-		print('\n [+] Tabla de Símbolos:\n')
+		print(f'\n [+] Tabla de Símbolos en la función \'{self.func.__name__}()\':\n')
 		for i, (x, y) in enumerate(self._locals.items()):
 			print(f'\t [{i+1}]: {x} = {y}')
 		print('')
