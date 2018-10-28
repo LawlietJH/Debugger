@@ -1,4 +1,10 @@
 
+# Decoradores para depurar funciones.
+# Debugger.py
+# Python 3
+# By: LawlietJH
+# - - - v1.2.0
+
 
 import functools
 import time
