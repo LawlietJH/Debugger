@@ -1,9 +1,11 @@
 
+
 import functools
 import time
 import sys
 
 
+#=======================================================================
 def timer(func):						# Recibe la Función.
 	@functools.wraps(func)				# Coloca a la Función como principal y no al decorador.
 	def fArgs(*args, **kwargs):			# Recibe los parametros de la funcion.
@@ -17,8 +19,27 @@ def timer(func):						# Recibe la Función.
 		
 		return valores
 	return fArgs
+#=======================================================================
 
+#=======================================================================
+def counter(func):
+	"""
+	Este es un decorador que cuenta e impríme el número de veces que la función ha sido ejecutada.
+	"""
+	@functools.wraps(func)				# Coloca a la Función como principal y no al decorador.
+	def fArgs(*args, **kwargs):
+		
+		fArgs.count = fArgs.count + 1
+		valores = func(*args, **kwargs)
+		
+		print(f'\n [+] La Función {func.__name__!r} Ha Sido Utilizada {fArgs.count} veces.')
+		
+		return valores
+	fArgs.count = 0
+	return fArgs
+#=======================================================================
 
+#=======================================================================
 def debug(func):						# Recibe la Función.
 	@functools.wraps(func)				# Coloca a la Función como principal y no al decorador.
 	def fArgs(*args, **kwargs):			# Recibe los parametros de la funcion.
@@ -34,7 +55,6 @@ def debug(func):						# Recibe la Función.
 		return valores
 	return fArgs
 
-#=======================================================================
 # Ejemplo de Decorador con Parameros: @debug(params)
 # ~ def debug(*args, **kwargs):					# Recibe los parametros del decorador. Obliga a utilizarlo como @debug()
 	# ~ def fDebug(func):						# Recibe la Función.
@@ -48,7 +68,7 @@ def debug(func):						# Recibe la Función.
 	# ~ return fDebug
 #=======================================================================
 
-
+#=======================================================================
 class getSymbolsTable(object):
 	
 	def __init__(self, func):
@@ -66,12 +86,12 @@ class getSymbolsTable(object):
 		try: valores = self.func(*args, **kwargs)
 		finally: sys.setprofile(None)
 		
-		self.locals		# Imprime La Tabla de Símbolos de la Función Indicada.
+		self.locals					# Imprime La Tabla de Símbolos de la Función Indicada.
 		
 		return valores
 	
 	@property
-	def __name__(self):
+	def __name__(self):				# Coloca a la Función como principal y no al decorador.
 		return self.func.__name__
 	
 	@property			# permite ejecutar la funcion 'self.locals()' como 'self.locals'.
@@ -79,25 +99,11 @@ class getSymbolsTable(object):
 		print('\n [+] Tabla de Símbolos:\n')
 		for i, (x, y) in enumerate(self._locals.items()):
 			print(f'\t [{i+1}]: {x} = {y}')
+#=======================================================================
 
 
-def counter(func):
-	"""
-	Este es un decorador que cuenta e impríme el número de veces que la función ha sido ejecutada.
-	"""
-	@functools.wraps(func)				# Coloca a la Función como principal y no al decorador.
-	def fArgs(*args, **kwargs):
-		
-		fArgs.count = fArgs.count + 1
-		valores = func(*args, **kwargs)
-		
-		print(f'\n [+] La Función {func.__name__!r} Ha Sido Utilizada {fArgs.count} veces.')
-		
-		return valores
-	fArgs.count = 0
-	return fArgs
 
-
+#=======================================================================
 # Test:
 
 @debug
@@ -107,6 +113,7 @@ def counter(func):
 def test(times, val):
 	for _ in range(times):
 		s = sum([i**2 for i in range(val)])
+#=======================================================================
 
 
 
