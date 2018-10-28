@@ -21,7 +21,7 @@ def timer(func):						# Recibe la Función.
 		tmp_fin = time.perf_counter()		# Obtiene el Tiempo actual despues de correr la función.
 		tmp_tot = tmp_fin - tmp_ini			# Calcula el tiempo transcurrido.
 		
-		print(f'\n [+] Terminado {func.__name__!r} en {tmp_tot:.4f} segundos.')
+		print(f'\n [+] Terminado {func.__name__!r} en {tmp_tot:.4f} segundos.\n')
 		
 		return valores
 	return fArgs
@@ -38,7 +38,7 @@ def counter(func):
 		fArgs.count = fArgs.count + 1
 		valores = func(*args, **kwargs)
 		
-		print(f'\n [+] La Función {func.__name__!r} Ha Sido Utilizada {fArgs.count} veces.')
+		print(f'\n [+] La Función {func.__name__!r} Ha Sido Utilizada {fArgs.count} veces.\n')
 		
 		return valores
 	fArgs.count = 0
@@ -56,7 +56,7 @@ def debug(func):						# Recibe la Función.
 		
 		valores = func(*args, **kwargs)
 		
-		print(f'\n [+] Función y Parámetros: {func.__name__}({rArgs})\t\n [+] Devuelve: {valores!r}')
+		print(f'\n [+] Función y Parámetros: {func.__name__}({rArgs})\n [+] Devuelve: {valores!r}\n')
 		
 		return valores
 	return fArgs
@@ -105,6 +105,7 @@ class getSymbolsTable(object):
 		print('\n [+] Tabla de Símbolos:\n')
 		for i, (x, y) in enumerate(self._locals.items()):
 			print(f'\t [{i+1}]: {x} = {y}')
+		print('')
 #=======================================================================
 
 
