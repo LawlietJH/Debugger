@@ -3,7 +3,7 @@
 # Debugger.py
 # Python 3
 # By: LawlietJH
-# - - - v1.2.3
+# - - - v1.2.4
 
 
 import functools
@@ -12,12 +12,44 @@ import sys
 
 
 #======================================================================= 
-# Variables Globales:
+#Variables Globales:
 
 nivelProfundidad = 0
 
 #======================================================================= 
-#Se utiliza como @lowerCase
+#Se utiliza como @timeSleep(parámetros)
+# 
+# Parámetros:
+# 
+# tmp  = tiempo que durara la pausa. Este valo puede ir desde 0.01 en adelante.
+# 
+# show = si es True mostrara una cadena en pantalla con la palabra "Espere..."
+#        y si es False, no imprimira nada.
+# 
+def timeSleep(tmp=1, show=False):				# Recibe los parametros del decorador.
+	""" Esta funcion (Decorador) sirve para hacer una pausa al terminar
+		la funcion a decorar, que puede ser desde 0.01 segundos en adelante. """
+	def fTimeSleep(func):						# Recibe la Función.
+		
+		global nivelProfundidad
+		nivelProfundidad += 1
+		
+		@functools.wraps(func)					# Coloca a la Función como principal y no al decorador.
+		def fArgs(*args, **kwargs):				# Recibe los parametros de la funcion.
+			valores = func(*args, **kwargs)
+			print()
+			for num in range(int(tmp*100)):
+				time.sleep(.01)
+				if show: sys.stdout.write(f'\r Esperando ... {tmp-(num/100):.2f}\t')
+			sys.stdout.write('\r\t\t\t\n')
+			return valores
+		
+		return fArgs
+	return fTimeSleep
+#=======================================================================
+
+#======================================================================= 
+#Se utiliza como: @lowerCase
 def lowerCase(func):						# Recibe la Función.
 	""" Esta funcion (Decorador) sirve para poner en minusculas todos
 		los caracteres en la variables dentro de la funcion a decorar. """
@@ -55,7 +87,7 @@ def lowerCase(func):						# Recibe la Función.
 #=======================================================================
 
 #=======================================================================
-#Se utiliza como @timer
+#Se utiliza como: @timer
 def timer(func):						# Recibe la Función.
 	""" Esta funcion (Decorador) permite contar el tiempo de ejecucion
 		de la funcion a decorar, desde el momento en que se ejecuta
@@ -78,7 +110,7 @@ def timer(func):						# Recibe la Función.
 #=======================================================================
 
 #=======================================================================
-#Se utiliza como @counter
+#Se utiliza como: @counter
 def counter(func):
 	""" Esta funcion (Decorador) permite contar e imprímir el número de
 		veces que la función a decorar ha sido ejecutada. """
@@ -99,7 +131,7 @@ def counter(func):
 #=======================================================================
 
 #=======================================================================
-#Se utiliza como @debug
+#Se utiliza como: @debug
 def debug(func):						# Recibe la Función.
 	""" Esta funcion (Decorador) permite observar con presicion los
 		valores de entrada y salida de la funcion a decorar. """
@@ -122,8 +154,8 @@ def debug(func):						# Recibe la Función.
 #=======================================================================
 
 #=======================================================================
-#Se utiliza como @getSymbolsTable
-class getSymbolsTable(object):
+#Se utiliza como: @symbolsTable
+class symbolsTable(object):
 	global nivelProfundidad
 	def __init__(self, func):
 		
@@ -165,6 +197,10 @@ class getSymbolsTable(object):
 
 #=======================================================================
 
+# Los decoradores se van ejecutando en orden ascendente (de abajo hacia
+# arriba)a partir de la funcion a decorar, por esto, se otorgo un orden
+# de prioridad tomando en cuenta la funcion de cada decorador.
+
 # La prioridad otorgada indica la posicion que debe tener un decorador
 # si se combina con otro para una misma funcion.
 
@@ -176,10 +212,11 @@ class getSymbolsTable(object):
 
 # Test:
 
+@timeSleep(2, True)		# Prioridad: 3 (Recomendable que sea el ultimo)
 @debug					# Prioridad: 2
 @counter				# Prioridad: 2
 @timer					# Prioridad: 2
-@getSymbolsTable		# Prioridad: 2
+@symbolsTable			# Prioridad: 2
 @lowerCase				# Prioridad: 1 (Recomendable que sea el primero)
 def test(times, val, xD):
 	for _ in range(times):
