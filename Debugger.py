@@ -3,7 +3,7 @@
 # Debugger.py
 # Python 3
 # By: LawlietJH
-# - - - v1.2.4
+# - - - v1.2.5
 
 
 import functools
@@ -75,6 +75,44 @@ def lowerCase(func):						# Recibe la Función.
 					elif type(a).__name__ == 'tuple': a = rec(a, tuple())
 					elif type(a).__name__ == 'dict':  a = rec(a, dict())
 					try: rargs.append(a.lower())
+					except: rargs.append(a)
+				if tipo == tuple(): rargs = tuple(rargs)
+			return rargs
+		
+		rargs = rec(args)
+		valores = func(*rargs, **kwargs)
+		
+		return valores
+	return fArgs
+#=======================================================================
+
+#======================================================================= 
+#Se utiliza como: @upperCase
+def upperCase(func):						# Recibe la Función.
+	""" Esta funcion (Decorador) sirve para poner en mayusculas todos
+		los caracteres en la variables dentro de la funcion a decorar. """
+	@functools.wraps(func)					# Coloca a la Función como principal y no al decorador.
+	def fArgs(*args, **kwargs):				# Recibe los parametros de la funcion.
+		
+		global nivelProfundidad
+		nivelProfundidad += 1
+		
+		def rec(vals, tipo=None):
+			
+			rargs = []
+			if tipo == dict():
+				for b, a in vals.items():
+					if   type(a).__name__ == 'list':  a = rec(a, list())
+					elif type(a).__name__ == 'tuple': a = rec(a, tuple())
+					elif type(a).__name__ == 'dict':  a = rec(a, dict())
+					try: rargs = {b.upper():a.upper()}
+					except: rargs = {b.upper():a}
+			else:
+				for a in vals:
+					if   type(a).__name__ == 'list':  a = rec(a, list())
+					elif type(a).__name__ == 'tuple': a = rec(a, tuple())
+					elif type(a).__name__ == 'dict':  a = rec(a, dict())
+					try: rargs.append(a.upper())
 					except: rargs.append(a)
 				if tipo == tuple(): rargs = tuple(rargs)
 			return rargs
@@ -212,12 +250,17 @@ class symbolsTable(object):
 
 # Test:
 
+# lowercase y uppercase:
+# Es recomendable ejecutar solo uno de ellos ya que de los 2 solo el
+# mas cercano a la funcion genera cambios.
+
 @timeSleep(2, True)		# Prioridad: 3 (Recomendable que sea el ultimo)
 @debug					# Prioridad: 2
 @counter				# Prioridad: 2
 @timer					# Prioridad: 2
 @symbolsTable			# Prioridad: 2
 @lowerCase				# Prioridad: 1 (Recomendable que sea el primero)
+@upperCase				# Prioridad: 1 (Recomendable que sea el primero)
 def test(times, val, xD):
 	for _ in range(times):
 		s = sum([i**2 for i in range(val)])
