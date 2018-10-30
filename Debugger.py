@@ -23,7 +23,7 @@ nivelProfundidad = 0
 # 
 # tmp  = tiempo que durara la pausa. Este valo puede ir desde 0.01 en adelante.
 # 
-# show = si es True mostrara una cadena en pantalla con la palabra "Espere..."
+# show = si es True mostrara una cadena en pantalla con la palabra "Esperando..."
 #        y si es False, no imprimira nada.
 # 
 def timeSleep(tmp=1, show=False):				# Recibe los parametros del decorador.
@@ -156,7 +156,8 @@ def debug(func):						# Recibe la Función.
 #=======================================================================
 #Se utiliza como: @symbolsTable
 class symbolsTable(object):
-	global nivelProfundidad
+	""" Este decorador permite ver la tabla de simbolos justo
+		al terminarde la ejecucion de la funcion decorada. """
 	def __init__(self, func):
 		
 		self._locals = []
@@ -177,15 +178,14 @@ class symbolsTable(object):
 		try: valores = self.func(*args, **kwargs)
 		finally: sys.setprofile(None)
 		
-		self.locals					# Imprime La Tabla de Símbolos de la Función Indicada.
+		self.locals()				# Imprime La Tabla de Símbolos de la Función Indicada.
 		
 		return valores
 	
-	@property
+	@property						# permite ejecutar la funcion 'self.__name__()' como propiedad: 'self.__name__'.
 	def __name__(self):				# Coloca a la Función como principal y no al decorador.
 		return self.func.__name__
 	
-	@property						# permite ejecutar la funcion 'self.locals()' como 'self.locals'.
 	def locals(self):
 		print(f'\n [+] Tabla de Símbolos en la función \'{self.func.__name__}()\':\n')
 		for i, (x, y) in enumerate(self._locals[-nivelProfundidad].items()):
